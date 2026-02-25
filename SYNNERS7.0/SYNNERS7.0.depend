@@ -1,0 +1,102 @@
+# depslib dependency file v1.0
+1743445502 source:c:\users\cczoa\onedrive\documents\comp315 project\group project\group project\synners7.0\main.cpp
+	<iostream>
+
+1771968890 source:c:\users\cczoa\onedrive\documents\comp315 project\group project\group project\synners7.0\order.cpp
+	"Order.h"
+
+1771946737 c:\users\cczoa\onedrive\documents\comp315 project\group project\group project\synners7.0\order.h
+	"Product.h"
+
+1771972287 c:\users\cczoa\onedrive\documents\comp315 project\group project\group project\synners7.0\product.h
+	<string>
+
+1771952916 source:c:\users\cczoa\onedrive\documents\comp315 project\group project\group project\synners7.0\product.cpp
+	"Product.h"
+
+1771958310 source:c:\users\cczoa\onedrive\documents\comp315 project\group project\group project\synners7.0\warehouse.cpp
+	"Warehouse.h"
+	"Inventory.h"
+	<iostream>
+	"Order.h"
+
+1771958309 c:\users\cczoa\onedrive\documents\comp315 project\group project\group project\synners7.0\warehouse.h
+	<vector>
+	<thread>
+	<memory>
+
+1771971985 c:\users\cczoa\onedrive\documents\comp315 project\group project\group project\synners7.0\inventory.h
+	<map>
+	<memory>
+	<mutex>
+	"Product.h"
+	"Order.h"
+
+1771968890 source:c:\users\cczoa\onedrive\documents\comp315 project\group project\group project\synners7.0\nonperishable.cpp
+	"NonPerishable.h"
+
+1771953740 c:\users\cczoa\onedrive\documents\comp315 project\group project\group project\synners7.0\nonperishable.h
+	<Product.h>
+
+1771952368 source:c:\users\cczoa\onedrive\documents\comp315 project\group project\group project\synners7.0\perishable.cpp
+	"Perishable.h"
+
+1771952368 c:\users\cczoa\onedrive\documents\comp315 project\group project\group project\synners7.0\perishable.h
+	<string>
+	<Product.h>
+
+1772009231 source:c:\users\sphok\desktop\comp315\synners7.0\inventory.cpp
+	"Inventory.h"
+	<iostream>
+	<map>
+	<memory>
+	<vector>
+	<algorithm>
+	<mutex>
+
+1771971986 c:\users\sphok\desktop\comp315\synners7.0\inventory.h
+	<map>
+	<memory>
+	<mutex>
+	"Product.h"
+	"Order.h"
+
+1771972288 c:\users\sphok\desktop\comp315\synners7.0\product.h
+	<string>
+
+1771946738 c:\users\sphok\desktop\comp315\synners7.0\order.h
+	"Product.h"
+
+1772009487 source:c:\users\sphok\desktop\comp315\synners7.0\main.cpp
+	<iostream>
+
+1771968892 source:c:\users\sphok\desktop\comp315\synners7.0\nonperishable.cpp
+	"NonPerishable.h"
+
+1771953742 c:\users\sphok\desktop\comp315\synners7.0\nonperishable.h
+	<Product.h>
+
+1771968892 source:c:\users\sphok\desktop\comp315\synners7.0\order.cpp
+	"Order.h"
+
+1771952370 source:c:\users\sphok\desktop\comp315\synners7.0\perishable.cpp
+	"Perishable.h"
+
+1771952370 c:\users\sphok\desktop\comp315\synners7.0\perishable.h
+	<string>
+	<Product.h>
+
+1771952918 source:c:\users\sphok\desktop\comp315\synners7.0\product.cpp
+	"Product.h"
+
+1771958312 source:c:\users\sphok\desktop\comp315\synners7.0\warehouse.cpp
+	"Warehouse.h"
+	"Inventory.h"
+	<iostream>
+	"Order.h"
+
+1771958310 c:\users\sphok\desktop\comp315\synners7.0\warehouse.h
+	<vector>
+	<thread>
+	<memory>
+
