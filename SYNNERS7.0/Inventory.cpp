@@ -10,18 +10,23 @@ using namespace std;
 
 //Zine Duma (224007195)
 void Inventory::addProduct( std::shared_ptr<Product> product){
-    // if we used the an object instead of a pointer:
+    // if we used an object instead of a pointer:
     // Polymorphism would have been lost, derived class behavior broken and
     // Requirement of smart pointer would not have been adhered to.
 
+    // exception: Check for null pointer to prevent undefined behavior
+    if (!product) {
+        throw std::invalid_argument("Cannot add null product to inventory");
+    }
+
     std::lock_guard<std::mutex> lock(inventoryMutex);
 
-    int id = product-> getProductID();  //getting it from the product class btw
+    int id = product-> getProductID(); // getting it from the product class btw
 
     // condition to check whether the product ID given exists in the system
     if( products.find(id) != products.end()){
-        std::cout<< "Product with ID"<< id << " already exists. \n";
-        return ;
+        // exception: Use exception instead of cout for error handling
+        throw std::runtime_error("Product with ID " + std::to_string(id) + " already exists");
     }
 
 
@@ -33,12 +38,18 @@ void Inventory::displayAllProducts() const{
     std::lock_guard<std::mutex> lock(inventoryMutex);
 
     if ( products.empty()){
-        std::cout<< " There are no products in inventory. \n";
-        return ;
+        // exception: Use exception instead of cout for empty inventory
+        throw std::runtime_error("Cannot display: There are no products in inventory");
     }
 
     // for each iteration we have a key value pair.
     for(const std::pair<const int, std::shared_ptr<Product>> &pair: products){
+
+        // exception: Validate each product pointer before accessing
+        if (!pair.second) {
+            throw std::runtime_error("Corrupted inventory: Null product found with ID " +
+                                    std::to_string(pair.first));
+        }
 
         //This is needed so that we can access the actual product since it is a pointer.
         const std::shared_ptr<Product>& product = pair.second;
@@ -52,15 +63,30 @@ void Inventory::displayAllProducts() const{
 
 void Inventory::sortByPrice(){ // this method sorts from cheapest to most expensive
     std::lock_guard<std::mutex> lock(inventoryMutex);
+
+    // exception: Check if we have enough products to sort meaningfully
+    if (products.size() < 2) {
+        throw std::runtime_error("Cannot sort: Need at least 2 products to sort by price");
+    }
+
     std::vector<std::shared_ptr<Product>> productList;// we had to use a vector because a map sorts by key only and not values
 
     for( const std::pair<const int, std::shared_ptr<Product>>& pair : products){
+        // exception: Validate each product before adding to vector
+        if (!pair.second) {
+            throw std::runtime_error("Cannot sort by price: Null product found with ID " +
+                                    std::to_string(pair.first));
+        }
         productList.push_back(pair.second); // this copies each product pointer to the list
     }
 
     std::sort(productList.begin(),productList.end(),
          []( const std::shared_ptr<Product>& a,
              const std::shared_ptr<Product>& b){
+              // exception: Validate during comparison to prevent crashes
+              if (!a || !b) {
+                  throw std::runtime_error("Null product encountered during price sort comparison");
+              }
               return a-> getPrice() < b-> getPrice();
          });
 
@@ -74,17 +100,31 @@ void Inventory::sortByPrice(){ // this method sorts from cheapest to most expens
 }
 
 void Inventory::sortByQuantity(){
-
      std::lock_guard<std::mutex> lock(inventoryMutex);
+
+     // exception: Check if we have enough products to sort meaningfully
+     if (products.size() < 2) {
+         throw std::runtime_error("Cannot sort: Need at least 2 products to sort by quantity");
+     }
+
      std::vector<std::shared_ptr<Product>> productList;// we had to use a vector because a map sorts by key only and not values
 
     for( const std::pair<const int, std::shared_ptr<Product>>& pair : products){
+        // exception: Validate each product before adding to vector
+        if (!pair.second) {
+            throw std::runtime_error("Cannot sort by quantity: Null product found with ID " +
+                                    std::to_string(pair.first));
+        }
         productList.push_back(pair.second); // this copies each product pointer to the list
     }
 
     std::sort(productList.begin(),productList.end(),
          []( const std::shared_ptr<Product>& a,
              const std::shared_ptr<Product>& b){
+              // exception: Validate during comparison to prevent crashes
+              if (!a || !b) {
+                  throw std::runtime_error("Null product encountered during quantity sort comparison");
+              }
               return a-> getQuantity() < b-> getQuantity();
          });
 
