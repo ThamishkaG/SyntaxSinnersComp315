@@ -1,108 +1,120 @@
-#ifndef PRODUCT_H
-#define PRODUCT_H
-#include <string>
+#include "Product.h"
 
-class Product
+Product::Product(int pID, std::string pname,double price,double dRate,double tRate , int quant)
+       :int productID(pID),
+        std::string name(pname),
+        double basePrice(prices),
+        int quantity(quant),
+        double discountRate(dRate),
+        double taxRate(tRate),{}
+Product::~Product() {}
+
+// getter functions
+int Product::getProductID()const
 {
-    private:
-        int productID;
-        std::string name;
-        double price;
-        int quantity;
-        double discountRate;
-        double taxRate;
+    return productID;
+}
 
-    public:
-         // Constructor: Initializes a new product with given values
-        Product(int productID, std::string name,double price,double discountRate,double taxRate ,int quantity );
-        virtual ~Product();
+std::string Product::getName()const
+{
+    return name ;
+}
 
-    // Calculates final price after applying tax and discount
-    // Pure virtual makes Product an abstract class
-    virtual double calculateFinalPrice() const = 0;
+double Product::getPrice()const
+{
+    return basePrice ;
+}
 
-    // Returns product ID (read-only)
-    int getProductID()const;
+int Product::getQuantity()const
+{
+    return quantity ;
+}
 
-    // Returns product Name (read-only)
-    std::string getName()const;
+//setter functions
+void Product::setTaxRate(double tRate)
+{
+    taxRate = tRate;
+}
 
-    // Returns base price (read-only)
-    double getPrice()const;
-
-    // Returns current stock quantity (read-only)
-    int getQuantity()const;
-
-    // Updates the tax rate
-    void setTaxRate(double taxRate);
-
-    // Updates the discount rate
-    void setDiscountRate(double discountRate);
-
-    // Decreases stock by specified amount
-    void reduceQuantity(int amount);
-
-    // Increase stock by specified amount
-    void increaseQuantity(int amount);
+void Product::setDiscountRate(double dRate)
+{
+    discountRate = dRate ;
+}
 
 
-};
-class Perishable : public Product {
-private:
-    std::string expiryDate; 
-    double discountPercentage; 
-    
-public:
-   // Constructor: Initializes Perishable with given values
-    Perishable(int id, const std::string& productName, double price, 
-               const std::string& expiry, double discount, int qty );
-    
-    // distructor
-    ~Perishable();
-    
-    
-    double calculateFinalPrice() const override;
-    
-    
-    
-    // return the expiry date of a perishable product
-    std::string getExpiryDate() const;
-    
-    //update the expirery date 
-    void setExpiryDate(const std::string& expiry);
-    
-    //set a discount of a product 
-    void setDiscount(double discount);
-    
-  
-};
+//reduce quantity by amount 
+void Product::reduceQuantity(int amount)
+{
+    quantity -= amount;
+}
+
+//increase quantity by amount
+void Product::increaseQuantity(int amount)
+{
+    quantity += amount;
+}
 
 
-class NonPerishable : public Product {
-private:
-    
-  
-    
-public:
-   // Constructor: Initializes a perishable product with given values 
-    NonPerishable(int id, const std::string& productName, double price, 
-                  double tax ,  int qty );
-    
-    
-    ~NonPerishable();
-    
-    
-    double calculateFinalPrice() const override;
-    
-    
-   
-    
-    
-    double getTaxRate() const;
-    void setTaxRate(double tax);
-   
-    
-    
-};
+//consructor 
+Perishable::Perishable(int id, const std::string& productName, double price,
+                       const std::string& expiry, double discount, int qty)
+    : Product(id, productName, price, qty),
 
-#endif // PRODUCT_H
+      expiryDate(expiry),
+      discountPrice(discount) {}
+}
+
+//distructor
+Perishable::~Perishable() {}
+
+//return final price icluding tax and discount
+double Perishable::calculateFinalPrice() const {
+    double price = getPrice()+getPrice()*taxRate() ;
+
+
+    if (discountPrice!=0) {
+        price = getPrice()+getPrice()*taxRate() - discountPrice ;
+    }
+}
+// return expiry date
+std::string Perishable::getExpiryDate() const {
+    return expiryDate;
+}
+
+//update expiry date
+void Perishable::setExpiryDate(const std::string& expiry) {
+    expiryDate = expiry;
+}
+
+
+//contructor of non perisharable
+NonPerishable::NonPerishable(int id, const std::string& productName, double price,
+                             double tax, int qty)
+    : Product(id, productName, price, qty),
+      taxRate(tax),{}
+
+//distructor of non perisharable
+NonPerishable::~NonPerishable() {
+
+}
+
+double NonPerishable::calculateFinalPrice() const {
+    double price = getPrice()+getPrice()*taxRate() ;
+
+
+    if (discountPrice!=0) {
+        price = getPrice()+getPrice()*taxRate() - discountPrice ;
+    }
+}
+
+//return tax rate
+double NonPerishable::getTaxRate() const {
+    return taxRate;
+}
+
+//update tax rate
+void NonPerishable::setTaxRate(double tax) {
+
+   taxRate = tax;
+
+}
