@@ -230,12 +230,47 @@ void Inventory::removeProduct(int productId) {
     }
 }
 
-//methoa will be implemented in phase 2 once Order class is implemented
-bool Inventory::processOrder(const Order& order) {
+bool Inventory::fulfilOrder(const Order& order) {
     std::lock_guard<std::mutex> lock(inventoryMutex);
 
-    std::cout << "Order processsing not implemented yet.\n";
-    return false;
+    //validate order object before processing, checking all items before modifying inventory to prevent partial fulfilment
+    for (std::vector<OrderItem>::const_iterator item = order.getItems().begin(); 
+        item != order.getItems().end(); ++item) {
+    
+
+        if (temp->productID < 0) {
+            throw std::invalid_argument("product ID cannot be negative");
+        }
+
+        std::map<int, std::shared_ptr<Product>>::iterator temp = products.find(item->productID);
+
+        if (temp == products.end()) {
+            std::cout << "Order cannot be fulfilled: Product ID " << item->productID << " not found.\n";
+            return false; // product not found, order cannot be fulfiled
+        }
+
+        if (temp->second->getQuantity() < item->quantity) {
+            std::cout << "Order cannot be fulfilled: Insufficient quantity for Product ID " << item->productID << ".\n";
+            std::cout << "Requested: " << item->quantity 
+                      << " | Available: " << temp->second->getQuantity() << ".\n";
+            return false; // insufficient quantity, order cannot be fulfiled
+        }
+
+    }
+
+    // if we reach this point, all items are available in sufficient quantity, so we can fulfil the order
+    for (std::vector<OrderItem>::const_iterator item = order.getItems().begin(); 
+        item != order.getItems().end(); ++item) {
+
+        std::map<int, std::shared_ptr<Product>>::iterator temp = products.find(item->productID);
+        // we can safely modify the inventory now since we've validated all items
+
+        int newQuantity = temp->second->getQuantity() - item->quantity;
+        temp->second->setQuantity(newQuantity); // update the quantity after fulfiling the order
+    }
+
+    std::cout << "Order fulfiled successfully.\n";
+    return true;
 }
 
 
