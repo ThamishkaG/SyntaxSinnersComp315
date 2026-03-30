@@ -147,6 +147,9 @@ void Inventory::searchProduct(int productId) const {
     // lock_guard automatically unlocks when it goes out of scope.
     std::lock_guard<std::mutex> lock(inventoryMutex);
 
+    if (productID < 0) {
+       throw std::invalid_argument("Product ID cannot be negative");
+    }
     //code was initially
     //auto temp = products.find(productId);
     //logically the same but I'm avoiding shortcuts
@@ -176,7 +179,10 @@ void Inventory::searchProduct(int productId) const {
 void Inventory::searchProduct(const std::string& name) const {
 
     std::lock_guard<std::mutex> lock(inventoryMutex);
-
+    
+    if (name.empty()) {
+        throw std::invalid_argument("Product name cannot be empty");
+    }
     //use a boolean because search id has an implicit boolean
     //ID has a single comparison, therefore it's a binary deceision
     //name search requires a full traversal, multiple comparisons and match tracking
@@ -208,7 +214,9 @@ void Inventory::removeProduct(int productId) {
     //locking mutex to protect shared resource (unordered_map)
 
     lock_guard<mutex> lock(inventoryMutex);
-
+    if (productId < 0) {
+        throw std::invalid_argument("Product ID cannot be negative");
+    }
     //search using key
     std::map<int, std::shared_ptr<Product>>:: iterator temp = products.find(productId);
 
@@ -235,7 +243,10 @@ void Inventory::restockProduct(int productId, int amount) {
 
     //since changing the quantity of a product modifies, it must be locked to prevent race conditions
     std::lock_guard<std::mutex> lock(inventoryMutex);
-
+    if (amount <= 0) {
+        throw std::invalid_argument("Restock amount must be positive");
+    }
+    
     std::map<int, std::shared_ptr<Product>>::iterator temp = products.find(productId);
 
     if (temp != products.end()) {

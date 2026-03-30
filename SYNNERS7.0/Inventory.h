@@ -30,7 +30,7 @@ public:
     void addProduct(int productId, int value);
     void displayAllProducts() const;
 
-    //function overloading search funtions
+    //overloading search funtions
     void searchProduct(int productId)const;
     void searchProduct(const std::string& name)const;
 
@@ -45,7 +45,6 @@ public:
     //will be implemented at a later stage
     //Plan
     bool processOrder(const Order& order);
-
     void restockProduct(int productId, int amount);
 
 };
