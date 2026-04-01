@@ -286,7 +286,7 @@ void Inventory::restockProduct(int productId, int amount) {
 
     if (temp != products.end()) {
         if (amount > 0) {
-            temp->second->setQuantity(temp->second->getQuantity()+amount); //set the quantity to the new one by adding it to the old one
+            temp->second->increaseQuantity(amount); // update the quantity using the superclass method directly innstead of using setQuantity
 
             std::cout<<"Product restocked successfully.\n";
         } else {
