@@ -230,7 +230,7 @@ void Inventory::removeProduct(int productId) {
     }
 }
 
-bool Inventory::fulfilOrder(const Order& order) {
+bool Inventory::processOrder(const Order& order) {
     std::lock_guard<std::mutex> lock(inventoryMutex);
 
     //validate order object before processing, checking all items before modifying inventory to prevent partial fulfilment
@@ -245,7 +245,7 @@ bool Inventory::fulfilOrder(const Order& order) {
         std::map<int, std::shared_ptr<Product>>::iterator temp = products.find(item->productID);
 
         if (temp == products.end()) {
-            std::cout << "Order cannot be fulfilled: Product ID " << item->productID << " not found.\n";
+            std::cout << "Order cannot be fulfiled: Product ID " << item->productID << " not found.\n";
             return false; // product not found, order cannot be fulfiled
         }
 

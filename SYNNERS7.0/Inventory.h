@@ -44,7 +44,7 @@ public:
 
     //will be implemented at a later stage
     //Plan
-    bool processOrder(const Order& order);
+    bool fulfilOrder(const Order& order);
     void restockProduct(int productId, int amount);
 
 };
