@@ -4,15 +4,30 @@
 #include <Product.h>
 
 
-class NonPerishable : public Product
-{
-    public:
-        NonPerishable(int productID,string name, double price, int quantity,double taxRate,double discountRate);
-        virtual ~NonPerishable();
-
-        double calculateFinalPrice();
-
-
+class NonPerishable : public Product {
+private:
+    
+  
+    
+public:
+   // Constructor: Initializes a perishable product with given values 
+    NonPerishable(int id, const std::string& productName, double price, 
+                  double tax ,  int qty );
+    
+    
+    ~NonPerishable();
+    
+    
+    double calculateFinalPrice() const override;
+    
+    
+   
+    
+    
+    double getTaxRate() const;
+    void setTaxRate(double tax);
+   
+    
+    
 };
-
 #endif // NONPERISHABLE_H
