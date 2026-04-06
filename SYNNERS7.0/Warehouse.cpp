@@ -2,6 +2,7 @@
 #include "Inventory.h"
 #include <iostream>
 #include "Order.h"
+static std::mutex coutMutex;
 
 Warehouse::Warehouse(int id,std::shared_ptr<Inventory> inventory)
     : warehouseID(id),inventory(inventory)
@@ -9,34 +10,35 @@ Warehouse::Warehouse(int id,std::shared_ptr<Inventory> inventory)
 }
 void Warehouse::processOrders(std::vector<Order>& orders)//Each thread gets created
 {
-    for (const Order& order :orders)
+    for (Order& order :orders)
    {
-    threads.emplace_back(&Warehouse::processOneOrder,this,order);
+    std::lock_guard<std::mutex> lock(threads_mutex);
+    threads.emplace_back(&Warehouse::processOneOrder,this,std::ref(order));
    }
 
 }
-void Warehouse::processOneOrder(Order order)//Each thread executes this function
+void Warehouse::processOneOrder(const Order& order)
 {
-    bool approved = inventory ->processOrder(order);
-    if (approved)
-    {
-        std::cout<<"Warehouse: "<<warehouseID<< " order approved.Successfully processed\n"
-    }
+    bool success = inventory->processOrder(order);
+
+    std::lock_guard<std::mutex> lock(coutMutex);
+
+    if (success)
+        std::cout << "Order " << order.getOrderID() << " processed\n";
     else
-    {
-        std::cout<<"Warehouse: "<< warehouseID<<" order NOT approved. Unsuccesfull order\n "
-    }
+        std::cout << "Order cannot be fulfilled: Product ID "
+                  << order.getProductID() << " not found\n";
 }
 void Warehouse::waitForThreads()
 {
-     for (std::thread &t : threads)
-     {
+    for (auto& t : threads)
+    {
         if (t.joinable())
         {
             t.join();
         }
-     }
+    }
+    threads.clear();
 }
-
 
 

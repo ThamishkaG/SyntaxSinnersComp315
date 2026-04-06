@@ -26,6 +26,13 @@ public:
     //default is sufficiant because we're not initializing anything
     //some methods should not allow for modifications so they've  been declared as constant
     Inventory() = default;
+
+    //explicite deltion of copy operations
+    Inventory(const Inventory&)=delete;//prevents copying
+    Inventory& operator=(Inventory&)=delete;//prevents assignment
+    Inventory(Inventory&&)=default;//allows moving
+    Inventory& operator=(Inventory&&)=default;
+
     void addProduct(std::shared_ptr<Product> product);
     void addProduct(int productId, int value);
     void displayAllProducts() const;
