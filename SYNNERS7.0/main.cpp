@@ -15,14 +15,15 @@
 
 //methods to implement,prototypes
 void displayMainMenu();//done
-void populateSampleProducts(Inventory& inventory);std::vector<Order> generateSampleOrders(int numOrders);
-std::vector<Order> generateSampleOrders(int numOrders);
-void processOrdersMultiThreaded(Inventory& inventory, std::vector<Order>& orders);
-void waitForUserInput();
+void populateSampleProducts(Inventory& inventory);std::vector<Order> generateSampleOrders(int numOrders);//done
+std::vector<Order> generateSampleOrders(int numOrders);//done
+void processOrdersMultiThreaded(Inventory& inventory, std::vector<Order>& orders);//done
+void waitForUserInput();//done
 
 int main()
 {
     
+
 }
 
 void displayMainMenu() {
