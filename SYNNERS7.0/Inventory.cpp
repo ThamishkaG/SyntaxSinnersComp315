@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <mutex>
 
-using namespace std;
+//using namespace std;
 
 //Zine Duma (224007195)
 void Inventory::addProduct( std::shared_ptr<Product> product){
@@ -53,8 +53,8 @@ void Inventory::displayAllProducts() const{
 
         //This is needed so that we can access the actual product since it is a pointer.
         const std::shared_ptr<Product>& product = pair.second;
-        std::cout<< "Product ID:" << product-> getProductID() <<  "Product Name:" <<product-> getName()
-                 << "Product Price:"<< product-> getPrice() << "Quantity:" << product-> getQuantity()<< "\n";
+        std::cout<< "Product ID: " << product-> getProductID() <<  " | Product Name: " <<product-> getName()
+                 << " | Product Price: "<< product-> getPrice() << " | Quantity: " << product-> getQuantity()<< "\n";
 
     }
 
@@ -147,7 +147,7 @@ void Inventory::searchProduct(int productId) const {
     // lock_guard automatically unlocks when it goes out of scope.
     std::lock_guard<std::mutex> lock(inventoryMutex);
 
-    if (productID < 0) {
+    if (productId < 0) {
        throw std::invalid_argument("Product ID cannot be negative");
     }
     //code was initially
@@ -179,7 +179,7 @@ void Inventory::searchProduct(int productId) const {
 void Inventory::searchProduct(const std::string& name) const {
 
     std::lock_guard<std::mutex> lock(inventoryMutex);
-    
+
     if (name.empty()) {
         throw std::invalid_argument("Product name cannot be empty");
     }
@@ -213,7 +213,7 @@ void Inventory::removeProduct(int productId) {
     //since erase() modifies the map, the mutex must be locked to prevent race conditions
     //locking mutex to protect shared resource (unordered_map)
 
-    lock_guard<mutex> lock(inventoryMutex);
+    std::lock_guard<std::mutex> lock(inventoryMutex);
     if (productId < 0) {
         throw std::invalid_argument("Product ID cannot be negative");
     }
@@ -230,47 +230,34 @@ void Inventory::removeProduct(int productId) {
     }
 }
 
-bool Inventory::fulfilOrder(const Order& order) {
+
+bool Inventory::processOrder(const Order& order) {
     std::lock_guard<std::mutex> lock(inventoryMutex);
 
-    //validate order object before processing, checking all items before modifying inventory to prevent partial fulfilment
-    for (std::vector<OrderItem>::const_iterator item = order.getItems().begin(); 
-        item != order.getItems().end(); ++item) {
-    
-
-        if (temp->productID < 0) {
-            throw std::invalid_argument("product ID cannot be negative");
-        }
-
-        std::map<int, std::shared_ptr<Product>>::iterator temp = products.find(item->productID);
-
-        if (temp == products.end()) {
-            std::cout << "Order cannot be fulfilled: Product ID " << item->productID << " not found.\n";
-            return false; // product not found, order cannot be fulfiled
-        }
-
-        if (temp->second->getQuantity() < item->quantity) {
-            std::cout << "Order cannot be fulfilled: Insufficient quantity for Product ID " << item->productID << ".\n";
-            std::cout << "Requested: " << item->quantity 
-                      << " | Available: " << temp->second->getQuantity() << ".\n";
-            return false; // insufficient quantity, order cannot be fulfiled
-        }
-
+    //validation
+    if (order.getProductID() < 0) {
+        throw std::invalid_argument("Product ID cannot be negative");
     }
 
-    // if we reach this point, all items are available in sufficient quantity, so we can fulfil the order
-    for (std::vector<OrderItem>::const_iterator item = order.getItems().begin(); 
-        item != order.getItems().end(); ++item) {
+    std::map<int, std::shared_ptr<Product>>:: iterator temp = products.find(order.getProductID());
 
-        std::map<int, std::shared_ptr<Product>>::iterator temp = products.find(item->productID);
-        // we can safely modify the inventory now since we've validated all items
-
-        int newQuantity = temp->second->getQuantity() - item->quantity;
-        temp->second->setQuantity(newQuantity); // update the quantity after fulfiling the order
+    if (temp == products.end()) {
+        std::cout << "Order cannot be fulfiled: Product ID " << order.getProductID() << "not found.\n";
+        return false;
     }
+
+    if (temp->second-> getQuantity() < order.getQuantity()) {
+        std::cout << "Order cannot be fulfilled: Insufficient quantity for Product ID " << order.getProductID() << ".\n";
+        std::cout << "Requested: " << order.getQuantity()
+                  << " | Available: " << temp->second->getQuantity() << ".\n";
+        return false; // insufficient quantity, order cannot be fulfiled
+    }
+
+    temp->second->reduceQuantity(order.getQuantity());
 
     std::cout << "Order fulfiled successfully.\n";
     return true;
+
 }
 
 
@@ -281,12 +268,12 @@ void Inventory::restockProduct(int productId, int amount) {
     if (amount <= 0) {
         throw std::invalid_argument("Restock amount must be positive");
     }
-    
+
     std::map<int, std::shared_ptr<Product>>::iterator temp = products.find(productId);
 
     if (temp != products.end()) {
         if (amount > 0) {
-            temp->second->setQuantity(temp->second->getQuantity()+amount); //set the quantity to the new one by adding it to the old one
+            temp->second->increaseQuantity(amount); // update the quantity using the superclass method directly innstead of using setQuantity
 
             std::cout<<"Product restocked successfully.\n";
         } else {

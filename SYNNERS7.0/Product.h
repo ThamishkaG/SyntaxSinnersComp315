@@ -10,8 +10,10 @@ class Product
         double price;
         int quantity;
         double discountRate;
-        double taxRate;
+        //double taxRate;
 
+    protected:
+        double taxRate;//so that subclasses can access it to prevent double implementation
     public:
          // Constructor: Initializes a new product with given values
         Product(int productID, std::string name,double price,double discountRate,double taxRate ,int quantity );
@@ -45,64 +47,14 @@ class Product
     // Increase stock by specified amount
     void increaseQuantity(int amount);
 
-
-};
-class Perishable : public Product {
-private:
-    std::string expiryDate; 
-    double discountPercentage; 
-    
-public:
-   // Constructor: Initializes Perishable with given values
-    Perishable(int id, const std::string& productName, double price, 
-               const std::string& expiry, double discount, int qty );
-    
-    // distructor
-    ~Perishable();
-    
-    
-    double calculateFinalPrice() const override;
-    
-    
-    
-    // return the expiry date of a perishable product
-    std::string getExpiryDate() const;
-    
-    //update the expirery date 
-    void setExpiryDate(const std::string& expiry);
-    
-    //set a discount of a product 
-    void setDiscount(double discount);
-    
-  
-};
-
-
-class NonPerishable : public Product {
-private:
-    
-  
-    
-public:
-   // Constructor: Initializes a perishable product with given values 
-    NonPerishable(int id, const std::string& productName, double price, 
-                  double tax ,  int qty );
-    
-    
-    ~NonPerishable();
-    
-    
-    double calculateFinalPrice() const override;
-    
-    
-   
-    
-    
+    //retrieves taxrate
     double getTaxRate() const;
-    void setTaxRate(double tax);
-   
-    
-    
+
+    //retrieves discountRate
+    double getDiscountRate() const;
+
+
 };
+
 
 #endif // PRODUCT_H

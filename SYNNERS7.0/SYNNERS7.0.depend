@@ -100,3 +100,150 @@
 	<thread>
 	<memory>
 
+1775406400 source:c:\users\cczoa\onedrive\documentos\comp315 project\group proj 6.1\gp6.2\syntaxsinnerscomp315\synners7.0\inventory.cpp
+	"Inventory.h"
+	<iostream>
+	<map>
+	<memory>
+	<vector>
+	<algorithm>
+	<mutex>
+
+1775393209 c:\users\cczoa\onedrive\documentos\comp315 project\group proj 6.1\gp6.2\syntaxsinnerscomp315\synners7.0\inventory.h
+	<map>
+	<memory>
+	<mutex>
+	"Product.h"
+	"Order.h"
+
+1775393986 c:\users\cczoa\onedrive\documentos\comp315 project\group proj 6.1\gp6.2\syntaxsinnerscomp315\synners7.0\product.h
+	<string>
+
+1775220988 c:\users\cczoa\onedrive\documentos\comp315 project\group proj 6.1\gp6.2\syntaxsinnerscomp315\synners7.0\order.h
+	"Product.h"
+	<string>
+
+1775409374 source:c:\users\cczoa\onedrive\documentos\comp315 project\group proj 6.1\gp6.2\syntaxsinnerscomp315\synners7.0\main.cpp
+	<iostream>
+	<memory>
+	<vector>
+	<thread>
+	<random>
+	<iomanip>
+	<string>
+	<ostream>
+	"Inventory.h"
+	"Warehouse.h"
+	"Product.h"
+	"Perishable.h"
+	"NonPerishable.h"
+	"Order.h"
+
+1775409620 c:\users\cczoa\onedrive\documentos\comp315 project\group proj 6.1\gp6.2\syntaxsinnerscomp315\synners7.0\warehouse.h
+	<mutex>
+	<vector>
+	<thread>
+	<memory>
+
+1775222345 c:\users\cczoa\onedrive\documentos\comp315 project\group proj 6.1\gp6.2\syntaxsinnerscomp315\synners7.0\perishable.h
+	<string>
+	<Product.h>
+
+1775393986 c:\users\cczoa\onedrive\documentos\comp315 project\group proj 6.1\gp6.2\syntaxsinnerscomp315\synners7.0\nonperishable.h
+	<string>
+	"Product.h"
+
+1775394406 source:c:\users\cczoa\onedrive\documentos\comp315 project\group proj 6.1\gp6.2\syntaxsinnerscomp315\synners7.0\order.cpp
+	"Order.h"
+
+1775224654 source:c:\users\cczoa\onedrive\documentos\comp315 project\group proj 6.1\gp6.2\syntaxsinnerscomp315\synners7.0\product.cpp
+	"Product.h"
+
+1775224014 source:c:\users\cczoa\onedrive\documentos\comp315 project\group proj 6.1\gp6.2\syntaxsinnerscomp315\synners7.0\perishable.cpp
+	"Perishable.h"
+	<string>
+
+1775393986 source:c:\users\cczoa\onedrive\documentos\comp315 project\group proj 6.1\gp6.2\syntaxsinnerscomp315\synners7.0\nonperishable.cpp
+	"NonPerishable.h"
+	<iostream>
+	<string>
+
+1775409904 source:c:\users\cczoa\onedrive\documentos\comp315 project\group proj 6.1\gp6.2\syntaxsinnerscomp315\synners7.0\warehouse.cpp
+	"Warehouse.h"
+	"Inventory.h"
+	<iostream>
+	"Order.h"
+
+1775488463 source:c:\users\sphok\desktop\comp315\workspace\syntaxsinnerscomp315\synners7.0\inventory.cpp
+	"Inventory.h"
+	<iostream>
+	<map>
+	<memory>
+	<vector>
+	<algorithm>
+	<mutex>
+
+1775488463 c:\users\sphok\desktop\comp315\workspace\syntaxsinnerscomp315\synners7.0\inventory.h
+	<map>
+	<memory>
+	<mutex>
+	"Product.h"
+	"Order.h"
+
+1775488464 c:\users\sphok\desktop\comp315\workspace\syntaxsinnerscomp315\synners7.0\product.h
+	<string>
+
+1775488463 c:\users\sphok\desktop\comp315\workspace\syntaxsinnerscomp315\synners7.0\order.h
+	"Product.h"
+	<string>
+
+1775491588 source:c:\users\sphok\desktop\comp315\workspace\syntaxsinnerscomp315\synners7.0\main.cpp
+	<iostream>
+	<memory>
+	<vector>
+	<thread>
+	<cstdlib>
+	<ctime>
+	<limits>
+	"Inventory.h"
+	"Warehouse.h"
+	"Product.h"
+	"Perishable.h"
+	"NonPerishable.h"
+	"Order.h"
+
+1775491653 c:\users\sphok\desktop\comp315\workspace\syntaxsinnerscomp315\synners7.0\warehouse.h
+	<mutex>
+	<vector>
+	<thread>
+	<memory>
+
+1775488463 c:\users\sphok\desktop\comp315\workspace\syntaxsinnerscomp315\synners7.0\perishable.h
+	<string>
+	<Product.h>
+
+1775488463 c:\users\sphok\desktop\comp315\workspace\syntaxsinnerscomp315\synners7.0\nonperishable.h
+	<string>
+	"Product.h"
+
+1775488463 source:c:\users\sphok\desktop\comp315\workspace\syntaxsinnerscomp315\synners7.0\nonperishable.cpp
+	"NonPerishable.h"
+	<iostream>
+	<string>
+
+1775488463 source:c:\users\sphok\desktop\comp315\workspace\syntaxsinnerscomp315\synners7.0\order.cpp
+	"Order.h"
+
+1775488463 source:c:\users\sphok\desktop\comp315\workspace\syntaxsinnerscomp315\synners7.0\perishable.cpp
+	"Perishable.h"
+	<string>
+
+1775488464 source:c:\users\sphok\desktop\comp315\workspace\syntaxsinnerscomp315\synners7.0\product.cpp
+	"Product.h"
+
+1775495052 source:c:\users\sphok\desktop\comp315\workspace\syntaxsinnerscomp315\synners7.0\warehouse.cpp
+	"Warehouse.h"
+	"Inventory.h"
+	<iostream>
+	"Order.h"
+

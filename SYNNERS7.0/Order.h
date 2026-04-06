@@ -1,7 +1,8 @@
 #ifndef ORDER_H
 #define ORDER_H
 #include "Product.h"
-using namespace std;
+#include <string>
+//using namespace std;
 
 class Order
 {
@@ -9,18 +10,20 @@ class Order
         int orderID;
         int productID;
         int quantity;
-        string status;
+        std::string status;
     public:
         Order(int orderID,int productID,int quantity);
         virtual ~Order();
 
-        int getOrderID();
+        int getOrderID() const;
 
-        int getProductID();
+        int getProductID() const;
 
-        int getQuantity();
+        int getQuantity() const;
 
-        void setStatus(string status);
+        void setStatus(const std::string& status);
+
+        std::string getStatus() const;
 
 
 };

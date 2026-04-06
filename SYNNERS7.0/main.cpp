@@ -2,10 +2,11 @@
 #include <memory>
 #include <vector>
 #include <thread>
-#include <random>
-#include <iomanip>
-#include <string>
-//our headers
+#include <cstdlib>
+#include <ctime>
+#include <limits>
+
+// Headers
 #include "Inventory.h"
 #include "Warehouse.h"
 #include "Product.h"
@@ -13,145 +14,248 @@
 #include "NonPerishable.h"
 #include "Order.h"
 
-//methods to implement,prototypes
-void displayMainMenu();//done
-void populateSampleProducts(Inventory& inventory);std::vector<Order> generateSampleOrders(int numOrders);//done
-std::vector<Order> generateSampleOrders(int numOrders);//done
-void processOrdersMultiThreaded(Inventory& inventory, std::vector<Order>& orders);//done
-void waitForUserInput();//done
+// Constants (NO MAGIC NUMBERS)
+const int NUM_WAREHOUSES = 3;
+const int NUM_PRODUCTS = 15;
+const int MAX_ORDER_QTY = 5;
+
+// Function prototypes
+void displayMainMenu();
+void populateSampleProducts(std::shared_ptr<Inventory> inventory);
+std::vector<Order> generateSampleOrders(int numOrders);
+void processOrdersMultiThreaded(std::shared_ptr<Inventory> inventory, std::vector<Order>& orders);
+void waitForUserInput();
 
 int main()
 {
-    
+    srand(static_cast<unsigned int>(time(nullptr))); // Seed ONCE
 
-}
+    // ✅ Shared Inventory across entire system
+    std::shared_ptr<Inventory> inventory = std::make_shared<Inventory>();
 
-void displayMainMenu() {
+    bool running = true;
 
-    std::cout << "\n========================================" << std::endl;
-    std::cout << "              MAIN MENU" << std::endl;
-    std::cout << "========================================" << std::endl;
-    std::cout << "1. Add Product" << std::endl;
-    std::cout << "2. Remove Product" << std::endl;
-    std::cout << "3. Display All Products" << std::endl;
-    std::cout << "4. Search Product by ID" << std::endl;
-    std::cout << "5. Search Product by Name" << std::endl;
-    std::cout << "6. Sort Products by Price" << std::endl;
-    std::cout << "7. Sort Products by Quantity" << std::endl;
-    std::cout << "8. Process Orders (Multi-threaded)" << std::endl;
-    std::cout << "9. Restock Product" << std::endl;
-    std::cout << "0. Exit" << std::endl;
-    std::cout << "=======================================" << std::endl;
-}
+    while (running)
+    {
+        displayMainMenu();
 
-void populateSampleProducts(Inventory &inventory){
+        int choice;
+        std::cout << "Enter choice: ";
+        std::cin >> choice;
 
-    //vector is easier to work with when handeling products when it comes to adding and removing
-    std::vector<std::shared_ptr<Product>> sampleProducts;
+        switch (choice)
+        {
+            case 1:
+            {
+                populateSampleProducts(inventory);
+                std::cout << "Sample products added.\n";
+                waitForUserInput();
+                break;
+            }
 
-    //a few nonperishable products(not food)
-    sampleProducts.push_back(std::make_shared<NonPerishable>(101, "Laptop", 999.99, 10, 0.15, 0.10));
-    sampleProducts.push_back(std::make_shared<NonPerishable>(102, "Mouse", 29.99, 50, 0.15, 0.00));
-    sampleProducts.push_back(std::make_shared<NonPerishable>(103, "Keyboard", 79.99, 30, 0.15, 0.05));
-    sampleProducts.push_back(std::make_shared<NonPerishable>(104, "Monitor", 299.99, 15, 0.15, 0.10));
-    sampleProducts.push_back(std::make_shared<NonPerishable>(105, "USB Cable", 9.99, 100, 0.15, 0.00));
-    //a fedw perishable products
-    sampleProducts.push_back(std::make_shared<Perishable>(201, "Milk", 3.99, 20, 0.00, 0.00, "2024-12-15"));
-    sampleProducts.push_back(std::make_shared<Perishable>(202, "Bread", 2.49, 25, 0.00, 0.00, "2024-12-10"));
-    sampleProducts.push_back(std::make_shared<Perishable>(203, "Eggs", 4.99, 15, 0.00, 0.00, "2024-12-20"));
-    sampleProducts.push_back(std::make_shared<Perishable>(204, "Cheese", 5.99, 12, 0.00, 0.05, "2025-01-01"));
-    sampleProducts.push_back(std::make_shared<Perishable>(205, "Yogurt", 3.49, 18, 0.00, 0.00, "2024-12-25"));
-    //a few non perishable food products
-    sampleProducts.push_back(std::make_shared<NonPerishable>(301, "Rice", 12.99, 40, 0.00, 0.00));
-    sampleProducts.push_back(std::make_shared<NonPerishable>(302, "Pasta", 1.99, 60, 0.00, 0.00));
-    sampleProducts.push_back(std::make_shared<NonPerishable>(303, "Canned Soup", 2.49, 35, 0.00, 0.00));
-    sampleProducts.push_back(std::make_shared<NonPerishable>(304, "Coffee", 8.99, 25, 0.00, 0.10));
-    sampleProducts.push_back(std::make_shared<NonPerishable>(305, "Tea", 4.99, 30, 0.00, 0.00));
- 
-    //all all created products toinventory
-    for (const auto& product : sampleProducts){
-        try{
-            inventory.addProduct(product);
-        }catch (const std::exception& e){
-            std::cout << "Warning: " << e.what() << std::endl;
+            case 2:
+            {
+                int id;
+                std::cout << "Enter product ID to remove: ";
+                std::cin >> id;
+
+                inventory->removeProduct(id);
+                std::cout << "Product removed.\n";
+                waitForUserInput();
+                break;
+            }
+
+            case 3:
+            {
+                inventory->displayAllProducts();
+                waitForUserInput();
+                break;
+            }
+
+            case 4:
+            {
+                int id;
+                std::cout << "Enter product ID: ";
+                std::cin >> id;
+
+                inventory->searchProduct(id);
+                waitForUserInput();
+                break;
+            }
+
+            case 5:
+            {
+                std::string name;
+                std::cout << "Enter product name: ";
+
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::getline(std::cin, name);
+
+                inventory->searchProduct(name);
+                waitForUserInput();
+                break;
+            }
+
+            case 6:
+            {
+                inventory->sortByPrice();
+                std::cout << "Products sorted by price.\n";
+                waitForUserInput();
+                break;
+            }
+
+            case 7:
+            {
+                inventory->sortByQuantity();
+                std::cout << "Products sorted by quantity.\n";
+                waitForUserInput();
+                break;
+            }
+
+            case 8:
+            {
+                int numOrders;
+                std::cout << "Enter number of orders: ";
+                std::cin >> numOrders;
+
+                auto orders = generateSampleOrders(numOrders);
+
+                processOrdersMultiThreaded(inventory, orders);
+                waitForUserInput();
+                break;
+            }
+
+            case 9:
+            {
+                int id, qty;
+                std::cout << "Enter product ID to restock: ";
+                std::cin >> id;
+
+                std::cout << "Enter quantity: ";
+                std::cin >> qty;
+
+                inventory->restockProduct(id, qty);
+                std::cout << "Product restocked.\n";
+                waitForUserInput();
+                break;
+            }
+
+            case 0:
+            {
+                std::cout << "Exiting program...\n";
+                running = false;
+                break;
+            }
+
+            default:
+            {
+                std::cout << "Invalid choice.\n";
+                waitForUserInput();
+            }
         }
     }
-    
-     std::cout << "Added " << sampleProducts.size() << " sample products to inventory." << std::endl;//confirmation
 
+    return 0;
 }
 
-std::vector<Order> generateSampleOrders(int numOrders){
-    
-    std::vector<Order> orders;
-    
-    // Available product IDs from what we created
-    int productIDs[] = {101, 102, 103, 104, 105, 201, 202, 203, 204, 205, 301, 302, 303, 304, 305};
-    int numProducts = 15;
-    
-    // Simple random number generation without complex distributions
-    srand(static_cast<unsigned int>(time(NULL)));
-    
-    for (int i = 1; i <= numOrders; i++){
-        int randomIndex = rand() % numProducts;
-        int productID = productIDs[randomIndex];
-    
-        // Random quantity between 1 and 5
-        int quantity = (rand() % 5) + 1;
-        
-        // Create order
-        Order order(i, productID, quantity);
-        orders.push_back(order);
+void displayMainMenu()
+{
+    std::cout << "\n========== MAIN MENU ==========\n";
+    std::cout << "1. Add Sample Products\n";
+    std::cout << "2. Remove Product\n";
+    std::cout << "3. Display All Products\n";
+    std::cout << "4. Search by ID\n";
+    std::cout << "5. Search by Name\n";
+    std::cout << "6. Sort by Price\n";
+    std::cout << "7. Sort by Quantity\n";
+    std::cout << "8. Process Orders (Multi-threaded)\n";
+    std::cout << "9. Restock Product\n";
+    std::cout << "0. Exit\n";
+    std::cout << "===============================\n";
+}
+
+void populateSampleProducts(std::shared_ptr<Inventory> inventory)
+{
+    std::vector<std::shared_ptr<Product>> products;
+
+    products.emplace_back(std::make_shared<NonPerishable>(101, "Laptop", 999.99, 0.15, 0.10, 10));
+    products.emplace_back(std::make_shared<NonPerishable>(102, "Mouse", 29.99, 0.15, 0.00, 50));
+
+    products.emplace_back(std::make_shared<Perishable>(201, "Milk", 3.99, "2024-12-15", 0.00, 0.00, 20));
+    products.emplace_back(std::make_shared<Perishable>(202, "Bread", 2.49, "2024-12-10", 0.00, 0.00, 25));
+
+    for (auto& p : products)
+    {
+        inventory->addProduct(p);
     }
-    
+
+    std::cout << products.size() << " products added.\n";
+}
+
+std::vector<Order> generateSampleOrders(int numOrders)
+{
+    std::vector<Order> orders;
+
+    for (int i = 1; i <= numOrders; i++)
+    {
+        int productIDs[] = {
+            101,102,103,104,105,
+            201,202,203,204,205,
+            301,302,303,304,305
+        };
+
+        int randomIndex = rand() % 15;
+        int productID = productIDs[randomIndex];
+        int quantity = (rand() % MAX_ORDER_QTY) + 1;
+
+        orders.emplace_back(i,productID, quantity);
+    }
+
     return orders;
 }
-void processOrdersMultiThreaded(Inventory &inventory, std::vector<Order> &orders)
+void processOrdersMultiThreaded(std::shared_ptr<Inventory> inventory, std::vector<Order>& orders)
 {
-    std::cout << "\n--- Processing Orders with Multiple Threads ---" << std::endl;
-    std::cout << "Thread ID | Order ID | Product ID | Quantity | Status" << std::endl;
-    std::cout << "--------------------------------------------------------" << std::endl;
-    
-    // Create warehouse objs
-    std::vector<Warehouse> warehouses;
+    std::cout << "\n--- Processing Orders ---\n";
+
+    std::vector<std::shared_ptr<Warehouse>> warehouses;
     std::vector<std::thread> threads;
-    
-    // Create 3
-    std::shared_ptr<Inventory> inventoryPtr = std::make_shared<Inventory>(inventory);
-    
-    for (int i = 0; i < 3; i++){
-        Warehouse warehouse(i + 1, inventoryPtr);
-        warehouses.push_back(warehouse);
+
+    // ✅ SAME shared inventory passed here
+    for (int i = 0; i < NUM_WAREHOUSES; i++)
+    {
+        warehouses.emplace_back(std::make_shared<Warehouse>(i + 1, inventory));
     }
-    
-    // Distribute orders to warehouses(round robin from comp313)
-    std::vector<std::vector<Order>> orderBatches(3);
-    for (size_t i = 0; i < orders.size(); i++){
-        int warehouseIndex = i % 3;
-        orderBatches[warehouseIndex].push_back(orders[i]);
+
+    // Distribute orders (round-robin)
+    std::vector<std::vector<Order>> batches(NUM_WAREHOUSES);
+
+    for (size_t i = 0; i < orders.size(); i++)
+    {
+        batches[i % NUM_WAREHOUSES].push_back(orders[i]);
     }
-    
-    // Create and start threads for each warehouse
-    for (int i = 0; i < 3; i++){
-        threads.push_back(std::thread([&warehouses, i, &orderBatches]() {
-            warehouses[i].processOrders(orderBatches[i]);
-        }));
+
+    // Launch threads
+    for (int i = 0; i < NUM_WAREHOUSES; i++)
+    {
+        threads.emplace_back([&warehouses, &batches, i]()
+        {
+            warehouses[i]->processOrders(batches[i]);
+        });
     }
-    
-    // Wait for all threads to finish
-    for (auto& thread : threads){
-        if (thread.joinable()){
-            thread.join();
-        }
+
+    // Join threads
+    for (auto& t : threads)
+    {
+        if (t.joinable())
+            t.join();
     }
-    
-    std::cout << "--------------------------------------------------------" << std::endl;
-    std::cout << "All orders have been processed!" << std::endl;
+
+    std::cout << "All orders processed.\n";
 }
 
 void waitForUserInput()
 {
     std::cout << "Press Enter to continue...";
-    std::cin.ignore();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cin.get();
 }
