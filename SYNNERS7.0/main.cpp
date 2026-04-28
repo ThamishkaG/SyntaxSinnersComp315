@@ -23,7 +23,7 @@ const int MAX_ORDER_QTY = 5;
 void displayMainMenu();
 void populateSampleProducts(std::shared_ptr<Inventory> inventory);
 std::vector<Order> generateSampleOrders(int numOrders);
-void processOrdersMultiThreaded(std::shared_ptr<Inventory> inventory, std::vector<Order>& orders);
+void processOrdersMultiThreaded(std::shared_ptr<Inventory> inventory, std::vector<Order>& osrders);
 void waitForUserInput();
 void clearInputStream();
 
